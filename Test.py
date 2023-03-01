@@ -14,7 +14,7 @@ g.add_edge(5, 2, 1)
 g.add_edge(6, 3, 4)
 g.add_edge(3, 5, 2)
 
-gg = GridGraph(3)
+gg = GridGraph(4)
 
 algs = Algorithms(gg)
 

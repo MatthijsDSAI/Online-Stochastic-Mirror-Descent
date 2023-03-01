@@ -29,7 +29,7 @@ class Graph:
         if v in self.graph and u in self.graph[v]:
             del self.graph[v][u]
 
-    def get_weight(self, u, v):
+    def get_edge_weight(self, u, v):
         if u in self.graph and v in self.graph[u]:
             return self.graph[u][v].get('weight')
         return None
@@ -67,13 +67,13 @@ class GridGraph(Graph):
             for j in range(n):
                 vertex = i * n + j
                 if j > 0:
-                    self.add_edge(vertex, (vertex - 1), 0)
+                    self.add_edge(vertex, (vertex - 1), 1)
                 if j < n-1:
-                    self.add_edge(vertex, (vertex + 1), 0)
+                    self.add_edge(vertex, (vertex + 1), 1)
                 if i > 0:
-                    self.add_edge(vertex, (vertex - n), 0)
+                    self.add_edge(vertex, (vertex - n), 1)
                 if i < n-1:
-                    self.add_edge(vertex, (vertex + n), 0)
+                    self.add_edge(vertex, (vertex + n), 1)
 
     def __str__(self):
         return super().__str__()
@@ -89,7 +89,7 @@ class GraphVisualizer:
         # Add the edges and their weights to the NetworkX graph
         for u in self.graph.graph:
             for v in self.graph.graph[u]:
-                w = self.graph.get_weight(u, v)
+                w = self.graph.get_edge_weight(u, v)
                 if w is not None:
                     nx_g.add_edge(u, v, weight=w)
 
@@ -99,7 +99,7 @@ class GraphVisualizer:
         # Draw the nodes and edges of the NetworkX graph
         nx.draw_networkx_nodes(nx_g, pos)
         nx.draw_networkx_edges(nx_g, pos)
-        nx.draw_networkx_edge_labels(nx_g, pos, edge_labels={(u, v): self.graph.get_edge_id(u, v) for u, v in nx_g.edges}) # change .get_id to .get_weight
+        nx.draw_networkx_edge_labels(nx_g, pos, edge_labels={(u, v): self.graph.get_edge_id(u, v) for u, v in nx_g.edges}) # change .get_id to .get_edge_weight
         nx.draw_networkx_labels(nx_g, pos, labels={node: str(node) for node in nx_g.nodes()})
 
 
@@ -125,18 +125,18 @@ class GridGraphVisualizer:
             for j in range(self.graph.n):
                 vertex = i * self.graph.n + j
                 if j > 0:
-                    G.add_edge(vertex, vertex - 1, weight=self.graph.get_edge_id(vertex, vertex-1))
+                    G.add_edge(vertex, vertex - 1, weight=(self.graph.get_edge_id(vertex, vertex-1), self.graph.get_edge_weight(vertex, vertex-1)))
                 if j < self.graph.n-1:
-                    G.add_edge(vertex, vertex + 1, weight=self.graph.get_edge_id(vertex, vertex+1))
+                    G.add_edge(vertex, vertex + 1, weight=(self.graph.get_edge_id(vertex, vertex+1), self.graph.get_edge_weight(vertex, vertex+1)))
                 if i > 0:
-                    G.add_edge(vertex, vertex - self.graph.n, weight=self.graph.get_edge_id(vertex, vertex-self.graph.n))
+                    G.add_edge(vertex, vertex - self.graph.n, weight=(self.graph.get_edge_id(vertex, vertex-self.graph.n), self.graph.get_edge_weight(vertex, vertex-self.graph.n)))
                 if i < self.graph.n-1:
-                    G.add_edge(vertex, vertex + self.graph.n, weight=self.graph.get_edge_id(vertex, vertex+self.graph.n))
+                    G.add_edge(vertex, vertex + self.graph.n, weight=(self.graph.get_edge_id(vertex, vertex+self.graph.n), self.graph.get_edge_weight(vertex, vertex+self.graph.n)))
 
         # Draw the graph
         plt.figure()
         pos = nx.get_node_attributes(G, 'pos')  # Get node positions
         nx.draw(G, pos, with_labels=True, font_weight='bold')
-        labels = nx.get_edge_attributes(G,'weight')
+        labels = nx.get_edge_attributes(G, 'weight')
         nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
         plt.show()
