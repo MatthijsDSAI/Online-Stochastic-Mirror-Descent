@@ -20,7 +20,7 @@ encoded_paths = algs.encode(paths)
 print("\nEncoded paths:\n" + str(encoded_paths))
 
 # run the EXP(2) algorithm
-algs.exp2(0.1, paths=encoded_paths, rounds=200)
+algs.exp2(0.01, paths=encoded_paths, rounds=10000)
 
 # visualize the graph
 gv = GridGraphVisualizer(gg) # for the visualization, each edge has a tuple for the label with the following structure: (id, weight)

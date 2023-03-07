@@ -73,12 +73,11 @@ class Algorithms:
                 numerator = P[a] * np.exp(-eta * np.inner(z, paths[a]))
                 denominator = 0
                 for b in range(len(paths)):
-                    if b != a:
-                        denominator += P[b] * np.exp(-eta * np.inner(z, paths[b]))
+                    denominator += P[b] * np.exp(-eta * np.inner(z, paths[b]))
 
                 P_new[a] = numerator / denominator
 
-            P = P_new/np.sum(P_new)                                 # normalize probability vector
+            P = P_new
             print("P_" + str(t) + " = " + str(np.round(P, 2)))
 
             # check if probabilities have converged
